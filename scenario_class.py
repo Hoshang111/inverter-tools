@@ -54,7 +54,7 @@ class Scenario:
         print(f"Scenario Name   : {self.name}")
         print(f"Start Date/Time : {self.start}")
         print(f"End Date/Time   : {self.end}")
-        print(f"Time Zone       : {self.timezone}")
+        print(f"Time Zone!      : {self.timezone}")
     
     def load(self):
         '''
