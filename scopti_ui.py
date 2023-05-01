@@ -2,6 +2,7 @@ from IPython.display import display
 from datetime import datetime
 import ipywidgets as widgets
 from scenario_class import Scenario
+from databricks.sdk.runtime import spark
 
 def get_all_scenarios():
     '''
@@ -23,6 +24,7 @@ def get_active_scenarios():
 
     Args:
         None
+        
 
     Returns:
             df_scenarios (pandas dataframe object): Dataframe that gives result of active scenarios
@@ -32,7 +34,7 @@ def get_active_scenarios():
     return df_scenarios
 
 
-def scopti_databricks_ui(is_active):
+def scopti_databricks_ui(is_active=True):
     '''
     Creates Databricks UI widgets for a Databricks notebook.
 

@@ -156,96 +156,6 @@ class Assumption:
 
 # COMMAND ----------
 
-# DBTITLE 1,Optimisation Test Cases
-'''
-Test 1: Full Optimisation Table
-'''
-def test_full_optimisation_table():
-    scenario = Scenario("ES21_SAT_1P")
-    assert(str(scenario.optimisation.df.index[0]) == '2025-01-01 01:00:00')
-    assert(str(scenario.optimisation.df.index[-1]) == '2066-01-01 00:00:00') 
-'''
-Test 2: Optimisation Table with start time and end time
-'''
-def test_optimisation_table_with_start_and_end():
-    scenario = Scenario("ES21_SAT_1P", start='2030-01-01 01:00:00', end='2035-12-31 20:00:00')
-    assert(str(scenario.optimisation.df.index[0]) == '2030-01-01 01:00:00')
-    assert(str(scenario.optimisation.df.index[-1]) == '2035-12-31 20:00:00')
-
-'''
-Test 3: Optimisation Table with just start time
-'''
-def test_optimisation_table_with_start():
-    scenario = Scenario("ES21_SAT_1P", start='2030-01-01 01:00:00')
-    assert(str(scenario.optimisation.df.index[0]) == '2030-01-01 01:00:00')
-    assert(str(scenario.optimisation.df.index[-1]) == '2066-01-01 00:00:00')  
-
-'''
-Test 4: Optimisation Table with just end time
-'''
-def test_optimisation_table_with_end():
-    scenario = Scenario("ES21_SAT_1P", end='2040-01-01 01:00:00')
-    assert(str(scenario.optimisation.df.index[0]) == '2025-01-01 01:00:00')
-    assert(str(scenario.optimisation.df.index[-1]) == '2040-01-01 01:00:00')
-'''
-Uncomment tests which you want to run
-'''
-if __name == '__main__'
-    # test_full_optimisation_table()
-    # test_optimisation_table_with_start_and_end()
-    # test_optimisation_table_with_start()
-    # test_optimisation_table_with_end()
-
-# COMMAND ----------
-
-# DBTITLE 1,Assumption Test Cases
-'''
-Assumption Test Cases
-'''
-
-'''
-Test 1: Full Assumption Table
-'''
-def test_full_assumption_table():
-    scenario = Scenario("ES21_SAT_1P")
-    assert(str(scenario.assumption.df['period_start'].iat[0]) == '2025-01-01 00:00:00')
-    assert(str(scenario.assumption.df['period_end'].iat[-1]) == '2066-01-01 00:00:00') 
-
-'''
-Test 2: Assumption Table with start time and end time
-'''
-def test_assumption_table_with_start_and_end():
-    scenario = Scenario("ES21_SAT_1P", start='2030-01-01 01:00:00', end='2035-12-31 20:00:00')
-    assert(str(scenario.assumption.df['period_start'].iat[0]) == '2030-01-01 01:00:00')
-    assert(str(scenario.assumption.df['period_end'].iat[-1]) == '2035-12-31 20:00:00')
-
-'''
-Test 3: Assumption Table with just start time
-'''
-def test_assumption_table_with_start():
-    scenario = Scenario("ES21_SAT_1P", start='2030-01-01 01:00:00')
-    assert(str(scenario.assumption.df['period_start'].iat[0]) == '2030-01-01 01:00:00')
-    assert(str(scenario.assumption.df['period_end'].iat[-1]) == '2066-01-01 00:00:00')  
-
-'''
-Test 4: Assumption Table with just end time
-'''
-def test_assumption_table_with_end():
-    scenario = Scenario("ES21_SAT_1P", end='2040-01-01 01:00:00')
-    assert(str(scenario.assumption.df['period_start'].iat[0]) == '2025-01-01 01:00:00')
-    assert(str(scenario.assumption.df['period_end'].iat[-1]) == '2040-01-01 01:00:00')
-
-'''
-Uncomment tests which you want to run
-'''
-if __name == '__main__'
-    # test_full_assumption_table()
-    # test_assumption_table_with_start_and_end()
-    # test_assumption_table_with_start()
-    # test_assumption_table_with_end()
-
-# COMMAND ----------
-
 # DBTITLE 1,SCOPTI UI
 from IPython.display import display
 from datetime import datetime
@@ -363,7 +273,7 @@ def scopti_databricks_ui(is_active):
             None
 
         Returns:
-                None: This function displays the assumption dataframe
+                None: This function displays the pivoted assumption dataframe
         '''
         with output:
             output.clear_output()
@@ -371,12 +281,12 @@ def scopti_databricks_ui(is_active):
             start_string = start_time.value.strftime("%Y-%m-%d") + ' ' + start_hour.value
             end_string = end_time.value.strftime("%Y-%m-%d") + ' ' + end_hour.value
             scenario = Scenario(name, start_string, end_string)
-            df = scenario.assumption.df.drop_duplicates(subset=['identifier'])[['identifier','unit','description']]
+            df = scenario.assumption.df.drop_duplicates(subset=['identifier'])[['identifier','unit','description','numeric_value', 'string_value']]
             display(df)
 
     # Register the button's callback function to query df and display results to the output widget
     optimisation_button.on_click(on_optimisation_button_clicked)
-    assumption_button.on_click(on_optimisation_button_clicked)
+    assumption_button.on_click(on_assumption_button_clicked)
     pivot_button.on_click(on_pivot_button_clicked)
 
     # Collect widgets in boxes
@@ -387,6 +297,107 @@ def scopti_databricks_ui(is_active):
 
     # Display the widgets and output
     display(scenario_widget, full_box, output)
+    return scenario
 
-if __name__ == "__main__":++
-    scopti_databricks_ui(True)
+if __name__ == "__main__":
+    scenario = scopti_databricks_ui(True)
+
+# COMMAND ----------
+
+optimisation = scenario.optimisation.df
+optimisation['DA_Market_take']
+
+# COMMAND ----------
+
+# DBTITLE 1,Optimisation Test Cases
+'''
+Test 1: Full Optimisation Table
+'''
+def test_full_optimisation_table():
+    scenario = Scenario("ES21_SAT_1P")
+    assert(str(scenario.optimisation.df.index[0]) == '2025-01-01 01:00:00')
+    assert(str(scenario.optimisation.df.index[-1]) == '2066-01-01 00:00:00') 
+'''
+Test 2: Optimisation Table with start time and end time
+'''
+def test_optimisation_table_with_start_and_end():
+    scenario = Scenario("ES21_SAT_1P", start='2030-01-01 01:00:00', end='2035-12-31 20:00:00')
+    assert(str(scenario.optimisation.df.index[0]) == '2030-01-01 01:00:00')
+    assert(str(scenario.optimisation.df.index[-1]) == '2035-12-31 20:00:00')
+
+'''
+Test 3: Optimisation Table with just start time
+'''
+def test_optimisation_table_with_start():
+    scenario = Scenario("ES21_SAT_1P", start='2030-01-01 01:00:00')
+    assert(str(scenario.optimisation.df.index[0]) == '2030-01-01 01:00:00')
+    assert(str(scenario.optimisation.df.index[-1]) == '2066-01-01 00:00:00')  
+
+'''
+Test 4: Optimisation Table with just end time
+'''
+def test_optimisation_table_with_end():
+    scenario = Scenario("ES21_SAT_1P", end='2040-01-01 01:00:00')
+    assert(str(scenario.optimisation.df.index[0]) == '2025-01-01 01:00:00')
+    assert(str(scenario.optimisation.df.index[-1]) == '2040-01-01 01:00:00')
+'''
+Uncomment tests which you want to run
+'''
+if __name == '__main__'
+    # test_full_optimisation_table()
+    # test_optimisation_table_with_start_and_end()
+    # test_optimisation_table_with_start()
+    # test_optimisation_table_with_end()
+
+# COMMAND ----------
+
+# DBTITLE 1,Assumption Test Cases
+'''
+Assumption Test Cases
+'''
+
+'''
+Test 1: Full Assumption Table
+'''
+def test_full_assumption_table():
+    scenario = Scenario("ES21_SAT_1P")
+    assert(str(scenario.assumption.df['period_start'].iat[0]) == '2025-01-01 00:00:00')
+    assert(str(scenario.assumption.df['period_end'].iat[-1]) == '2066-01-01 00:00:00') 
+
+'''
+Test 2: Assumption Table with start time and end time
+'''
+def test_assumption_table_with_start_and_end():
+    scenario = Scenario("ES21_SAT_1P", start='2030-01-01 01:00:00', end='2035-12-31 20:00:00')
+    assert(str(scenario.assumption.df['period_start'].iat[0]) == '2030-01-01 01:00:00')
+    assert(str(scenario.assumption.df['period_end'].iat[-1]) == '2035-12-31 20:00:00')
+
+'''
+Test 3: Assumption Table with just start time
+'''
+def test_assumption_table_with_start():
+    scenario = Scenario("ES21_SAT_1P", start='2030-01-01 01:00:00')
+    assert(str(scenario.assumption.df['period_start'].iat[0]) == '2030-01-01 01:00:00')
+    assert(str(scenario.assumption.df['period_end'].iat[-1]) == '2066-01-01 00:00:00')  
+
+'''
+Test 4: Assumption Table with just end time
+'''
+def test_assumption_table_with_end():
+    scenario = Scenario("ES21_SAT_1P", end='2040-01-01 01:00:00')
+    assert(str(scenario.assumption.df['period_start'].iat[0]) == '2025-01-01 01:00:00')
+    assert(str(scenario.assumption.df['period_end'].iat[-1]) == '2040-01-01 01:00:00')
+
+'''
+Uncomment tests which you want to run
+'''
+if __name == '__main__'
+    # test_full_assumption_table()
+    # test_assumption_table_with_start_and_end()
+    # test_assumption_table_with_start()
+    # test_assumption_table_with_end()
+
+# COMMAND ----------
+
+scenario = Scenario()
+optimisation = scenario.optimisation.df
