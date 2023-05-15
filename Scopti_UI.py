@@ -388,5 +388,9 @@ def scopti_databricks_ui(is_active):
     # Display the widgets and output
     display(scenario_widget, full_box, output)
 
-if __name__ == "__main__":++
+if __name__ == "__main__":
     scopti_databricks_ui(True)
+
+# COMMAND ----------
+
+Scenario = scenario.optimisation.df

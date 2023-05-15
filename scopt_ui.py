@@ -2,14 +2,13 @@ from IPython.display import display
 from datetime import datetime
 import ipywidgets as widgets
 from scenario_class import Scenario
+from databricks.sdk.runtime import spark
 
 def get_all_scenarios():
     '''
     Gets all scenarios from the details table
-
     Args:
         None
-
     Returns:
             df_scenarios (pandas dataframe object): Dataframe that gives result of all scenarios
     '''
@@ -20,10 +19,9 @@ def get_all_scenarios():
 def get_active_scenarios():
     '''
     Gets the active scenarios from the details table
-
     Args:
         None
-
+        
     Returns:
             df_scenarios (pandas dataframe object): Dataframe that gives result of active scenarios
     '''
@@ -32,13 +30,11 @@ def get_active_scenarios():
     return df_scenarios
 
 
-def scopti_databricks_ui(is_active):
+def scopti_databricks_ui(is_active=True):
     '''
     Creates Databricks UI widgets for a Databricks notebook.
-
     Args:
         is_active (boolean) : Tells UI whether or not to select active scenarios
-
     Returns:
             None: This function displays the created widgets.
     '''
@@ -74,10 +70,8 @@ def scopti_databricks_ui(is_active):
     def on_optimisation_button_clicked(_):
         '''
         Handles optmisation button click and displays pandas dataframe
-
         Args:
             None
-
         Returns:
                 None: This function displays the optimisation dataframe
         '''
@@ -92,10 +86,8 @@ def scopti_databricks_ui(is_active):
     def on_assumption_button_clicked(_):
         '''
         Handles assumption button click and displays pandas dataframe
-
         Args:
             None
-
         Returns:
                 None: This function displays the assumption dataframe
         '''
@@ -110,10 +102,8 @@ def scopti_databricks_ui(is_active):
     def on_pivot_button_clicked(_):
         '''
         Handles assumption button click and displays pandas dataframe
-
         Args:
             None
-
         Returns:
                 None: This function displays the assumption dataframe
         '''
