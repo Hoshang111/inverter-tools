@@ -373,7 +373,7 @@ def scopti_databricks_ui(is_active):
             scenario = Scenario(name, start_string, end_string)
             df = scenario.assumption.df.drop_duplicates(subset=['identifier'])[['identifier','unit','description']]
             display(df)
-
+`
     # Register the button's callback function to query df and display results to the output widget
     optimisation_button.on_click(on_optimisation_button_clicked)
     assumption_button.on_click(on_optimisation_button_clicked)
