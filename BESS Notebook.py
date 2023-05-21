@@ -32,7 +32,6 @@ BESS_df['BESS Size'] = 20
 #     if i in oc_index:
 #         BESS_df['BESS Size'].loc[index] = operational_capacity['numeric_value'].loc[i]
 
-BESS_df['BESS Size'] = BESS_df['BESS Size']
 BESS_df['Net Flow of Energy'] = BESS_df['PV Production/Inverter'] - BESS_df['Demand/Inverter']
 
 charge_conditions = [BESS_df['Net Flow of Energy'] >= 0, BESS_df['Net Flow of Energy'] < 0]
@@ -48,16 +47,16 @@ bess_power = 2
 current_spill = 0
 for row in BESS_df.iterrows():
     net_flow = row[1][3]
-    if bess_state + net_flow >= 0 and bess_state + net_flow <= bess_size:
+    if bess_state + net_flow >= 0 and bess_state + net_flow <= 20:
         if net_flow > bess_power:
             current_spill += net_flow - bess_power
             bess_state += bess_power*bess_effiency
         else:
             bess_state += net_flow*bess_effiency
-        bess_states.append(bess_state)
+    bess_states.append(bess_state)
     spill.append(current_spill)
 
-BESS_df['BESS State of Charge'] = b_size
+BESS_df['BESS State of Charge'] = bess_states
 BESS_df['Spill'] = spill
 BESS_df
 
@@ -67,7 +66,7 @@ BESS_df.tail(30)
 
 # COMMAND ----------
 
-BESS_df.plot(y='Spill', use_index=True)
+BESS_df.plot(y='BESS State of Charge', use_index=True)
 
 # COMMAND ----------
 
